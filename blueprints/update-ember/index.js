@@ -45,6 +45,9 @@ module.exports = {
                 //Update resolutions
                 projectBowerFileContents.resolutions = {};
                 projectBowerFileContents.resolutions.ember = "2.2.0";
+                   
+                //FIX: Temporary Ember bug:  http://stackoverflow.com/questions/34703545/uncaught-error-could-not-find-module-ember-imported-from-ui-app-loader-js1
+                projectBowerFileContents.dependencies.jquery = "1.11.3";
                 
                 //Reconstruct formatted string
                 var updatedBowerFileContents = JSON.stringify(projectBowerFileContents, null, "\t");
