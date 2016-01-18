@@ -4,7 +4,7 @@ var shell = require("shelljs");
 
 /*jshint node:true*/
 module.exports = {
-    description: 'Create a GUI for Maverick',
+    description: 'Create a GUI for Maverick CLI',
 
     normalizeEntityName: function (entityName) {
         return entityName;
@@ -13,8 +13,11 @@ module.exports = {
     beforeInstall: function () {
         var self = this;
         var addonPath = path.join(this.project.root, 'addon');
+        console.log('addonPath', addonPath); 
         var routesPath = path.join(addonPath, 'routes');
+        console.log('routesPath', routesPath); 
         var maverickBuilderRouteFile = path.join(routesPath, 'maverick-builder.js');
+        console.log('maverickBuilderRouteFile', maverickBuilderRouteFile); 
         
         if( maverickBuilderRouteFile ){
             self.ui.writeLine("Skipping: The Maverick Builder route already exists...");
