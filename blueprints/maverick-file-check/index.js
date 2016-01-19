@@ -22,11 +22,23 @@ module.exports = {
             var bowerPath = path.join(this.project.root, 'bower_components');
             var bowerBootstrapPath = path.join(bowerPath, 'bootstrap');
             var bowerBootstrapFile  = path.join(bowerBootstrapPath, 'package.json');
-
+            
+            var appPath = path.join(this.project.root, 'app');
+            var servicesPath = path.join(appPath, 'services');
+            var appServiceFile = path.join(servicesPath, 'maverick.js');
+        
             switch(step){
                 case "setup-ui":
                     try {
                         fs.readFileSync(bowerBootstrapFile, 'utf8');
+                        self.ui.writeLine('{"status":"success", "message":"File exists!"}');
+                    } catch (error) {
+                        self.ui.writeLine('{"status":"fail", "message":"No file exists"}');
+                    }
+                 break;
+                case "implement-core":
+                    try {
+                        fs.readFileSync(appServiceFile, 'utf8');
                         self.ui.writeLine('{"status":"success", "message":"File exists!"}');
                     } catch (error) {
                         self.ui.writeLine('{"status":"fail", "message":"No file exists"}');

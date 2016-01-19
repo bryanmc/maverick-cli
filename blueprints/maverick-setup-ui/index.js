@@ -4,7 +4,7 @@ var shell = require("shelljs");
 
 /*jshint node:true*/
 module.exports = {
-    description: 'Updates Ember and Ember Data version in bower.json and then runs `bower install`',
+    description: 'Adds Twitter bootstrap and related UI elements to the project.',
 
     normalizeEntityName: function (entityName) {
         return entityName;
@@ -22,6 +22,7 @@ module.exports = {
             self.ui.writeLine('{"status":"success", "message":"Maverick Setup UI step was previously completed."}');
         } catch (error) {
             shell.exec("ember install ember-bootstrap");
+            shell.exec("ember install ember-toastr");
             self.ui.writeLine('{"status":"success", "message":"Maverick Setup UI step complete');
         }
         
