@@ -18,23 +18,24 @@ module.exports = {
         fs.readFile(projectBowerFilePath, 'utf8', function (err, data) {
             //Parse it
             try {
-                self.ui.writeLine('Parsing bower.json...');
+                // self.ui.writeLine('Parsing bower.json...');
                 projectBowerFileContents = JSON.parse(data);
             } catch (error) {
-                self.ui.writeLine('Error parsing bower.json...', error);
+                // self.ui.writeLine('Error parsing bower.json...', error);
+                self.ui.writeLine('{"status":"fail", "message":"'+error+'"}');
                 return error;
             }
 
             if (projectBowerFileContents) {
 
-                self.ui.writeLine('Found \'ember\' version: ' + projectBowerFileContents.dependencies.ember);
-                self.ui.writeLine('Found \'ember-data\' version: ' + projectBowerFileContents.dependencies['ember-data']);
+                // self.ui.writeLine('Found \'ember\' version: ' + projectBowerFileContents.dependencies.ember);
+                // self.ui.writeLine('Found \'ember-data\' version: ' + projectBowerFileContents.dependencies['ember-data']);
             
                 var emberVersionNumber = projectBowerFileContents.dependencies.ember;
                 var emberDataVersionNumber = projectBowerFileContents.dependencies['ember-data'];
                 
                 if ( emberVersionNumber == "2.2.0" && emberDataVersionNumber == "2.2.0" ) {
-                    self.ui.writeLine('Ember / bower version is up to date at 2.2.0');
+                    self.ui.writeLine('{"status":"success", "message":"Ember / bower version is up to date at 2.2.0"}');        
                     return;
                 }
                 
@@ -52,11 +53,11 @@ module.exports = {
                 //Reconstruct formatted string
                 var updatedBowerFileContents = JSON.stringify(projectBowerFileContents, null, "\t");
                 
-                console.log("Update Bower File Contents:", updatedBowerFileContents);
+                // console.log("Update Bower File Contents:", updatedBowerFileContents);
                 
                 fs.writeFileSync(projectBowerFilePath, updatedBowerFileContents);
-                shell.exec("echo 'updating bower...' && bower install");
-
+                shell.exec("bower install");
+                self.ui.writeLine('{"status":"success", "message":"Ember / bower version successfully updated to 2.2.0"}');  
             }
 
         });     

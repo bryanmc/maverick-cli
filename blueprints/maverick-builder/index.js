@@ -4,7 +4,7 @@ var shell = require("shelljs");
 
 /*jshint node:true*/
 module.exports = {
-    description: 'Create a GUI for Maverick CLI',
+    description: 'Create a GUI for Maverick',
 
     normalizeEntityName: function (entityName) {
         return entityName;
@@ -12,17 +12,42 @@ module.exports = {
     
     beforeInstall: function () {
         var self = this;
-        var addonPath = path.join(this.project.root, 'addon');
-        console.log('addonPath', addonPath); 
-        var routesPath = path.join(addonPath, 'routes');
-        console.log('routesPath', routesPath); 
-        var maverickBuilderRouteFile = path.join(routesPath, 'maverick-builder.js');
-        console.log('maverickBuilderRouteFile', maverickBuilderRouteFile); 
+        var appPath = path.join(this.project.root, 'app');
+        var routesPath = path.join(appPath, 'routes');
+        var templatesPath = path.join(appPath, 'templates');
+        var appRouterFile = path.join(appPath, 'router.js');
+        var appRouteFile = path.join(routesPath, 'maverick-builder.js');
+        var appTemplateFile = path.join(templatesPath, 'maverick-builder.hbs');
+
+        var nodeModsPath = path.join(this.project.root, 'node_modules');
+        var addonPath = path.join(nodeModsPath, 'maverick-cli');
+        var addonBlueprintsPath = path.join(addonPath, 'blueprints');
+        var addonBlueprintSrcPath = path.join(addonBlueprintsPath, '/maverick-builder/src');
+        var addonBlueprintSrcRouterFile = path.join(addonBlueprintSrcPath, 'router.js');
+        var addonBlueprintSrcTemplateFile = path.join(addonBlueprintSrcPath, 'template.js');
+        var addonBlueprintSrcRouteFile = path.join(addonBlueprintSrcPath, 'route.js');
         
-        if( maverickBuilderRouteFile ){
+        console.log('App Router File', appRouterFile); 
+        console.log('Addon Blueprint MB Src Router File', addonBlueprintSrcRouterFile); 
+        
+        try {
+            fs.readFileSync(appRouteFile, 'utf8');
             self.ui.writeLine("Skipping: The Maverick Builder route already exists...");
-        }else{
-            self.ui.writeLine("Creating: New `maverick-builer` route...");
+        } catch (error) {
+            self.ui.writeLine("Creating: New `maverick-builer` route...");  
+            try {
+                var srcRouterFile = fs.readFileSync(addonBlueprintSrcRouterFile, 'utf8');
+                var srcTemplateFile = fs.readFileSync(addonBlueprintSrcTemplateFile, 'utf8'); 
+                var srcRouteFile = fs.readFileSync(addonBlueprintSrcRouteFile, 'utf8'); 
+                //Writer Router.js template file to source
+                fs.writeFileSync(appRouterFile, srcRouterFile);
+                fs.writeFileSync(appTemplateFile, srcTemplateFile);
+                fs.writeFileSync(appRouteFile, srcRouteFile);
+                //Run Ember generate for route
+                //shell.exec("ember g route maverick-builder");  
+            } catch (error) {
+                self.ui.writeLine("Failure: Creating the maverick-builder route failed in the last step...");
+            }
         }
 
     }
