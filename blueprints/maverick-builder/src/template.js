@@ -16,6 +16,7 @@
     }
     pre { background: #272822 none repeat scroll 0% 0%; }
     h4 { font-weight: bold; }
+    ul.step-checklist-items li { margin: 0 0 15px 15px; }
 </style>
 
 <div id="maverick-builder-wrapper"> 
@@ -42,17 +43,48 @@
 
       <div class="row marketing">
         <div class="col-lg-6">
-          <h4>Update Bower Ember & Ember Data Version</h4>
-          <p>Once you're done here, click the button below to completely remove any remnants of Maverick Builder.</p>
-          <pre><code class="language-bash">$ ember g update-ember</code></pre>
-          <span class="file-name">ember cli</span>
+            <div class="row">
+                <div class="col-lg-6">
+                    <h4>Update Bower Ember & Ember Data Version</h4>
+                    <p class="label label-primary" style="margin: 10px 0 20px 0;">
+                        <a style="color:white;" target="_blank" href="https://github.com/bryanmc/maverick-cli/tree/master/blueprints/update-ember">
+                        Source Code</a>
+                    </p>
+                    <hr />
+                    
+                    <p>Takes care of some critical setup errands.</p>
+                    <ul class="well step-checklist-items">
+                        <li>Updates `ember` and `ember-data` version to 2.2.0</li>
+                        <li>Fixes jQuery depenency version / ember bug</li>
+                        <li>Adds jQuery Cookie as a dependency in bower.json</li>
+                        <li>Runs `bower install` to install updated / missing deps</li>
+                    </ul>
+                </div>
+                <div class="col-lg-6">
+                    <button {{action "MB_updateEmber"}} class="btn btn-block btn-large {{if check_updateEmber "btn-success" "btn-default"}}" style="margin-top:10px;">Update Ember</button>
+                    <p style="margin-top:10px;"><strong>Status:</strong> {{#if check_updateEmber}}Completed{{else}}Incomplete{{/if}}</p>
+                </div>
+                <div class="col-lg-12">
+                    <pre><code class="language-bash">$ ember g update-ember</code></pre>
+                    <hr />
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-6">
+                    <h4>UI Setup</h4>
+                    <p>Adds Twitter bootstrap and related UI elements to the project.</p>
+                </div>
+                <div class="col-lg-6">
+                    <button {{action "MB_setupUi"}} class="btn btn-block btn-large {{if check_setupUi "btn-success" "btn-default"}}" style="margin-top:10px;">Setup UI & Frameworks</button>
+                    <p style="margin-top:10px;"><strong>Status:</strong> {{#if check_setupUi}}Completed{{else}}Incomplete{{/if}}</p>
+                </div>
+                <div class="col-lg-12">
+                    <pre><code class="language-bash">$ ember g maverick-setup-ui</code></pre>
+                    <hr />
+                </div>
+            </div>
           
-          <h4>Destroy Maverick Builder</h4>
-          <p>Once you're done here, click the button below to completely remove any remnants of Maverick Builder.</p>
-          <button {{action "MB_destroyBuilder"}} class="hide btn btn-block btn-danger btn-large">Destroy Maverick Builder</button>
-          
-          <pre><code class="language-bash">$ ember g maverick-builder</code></pre>
-          <span class="file-name">ember cli</span>
         </div>
 
         <div class="col-lg-6">

@@ -16,6 +16,7 @@ module.exports = {
         var projectBowerFilePath = path.join(this.project.root, 'bower.json');
         
         fs.readFile(projectBowerFilePath, 'utf8', function (err, data) {
+            
             //Parse it
             try {
                 // self.ui.writeLine('Parsing bower.json...');
@@ -49,6 +50,9 @@ module.exports = {
                    
                 //FIX: Temporary Ember bug:  http://stackoverflow.com/questions/34703545/uncaught-error-could-not-find-module-ember-imported-from-ui-app-loader-js1
                 projectBowerFileContents.dependencies.jquery = "1.11.3";
+                
+                //Add jQuery Cookie dependency
+                projectBowerFileContents.dependencies['jquery-cookie'] = "~1.4.1";
                 
                 //Reconstruct formatted string
                 var updatedBowerFileContents = JSON.stringify(projectBowerFileContents, null, "\t");

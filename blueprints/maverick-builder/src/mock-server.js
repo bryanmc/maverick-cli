@@ -16,6 +16,24 @@ module.exports = function (app) {
         var cmd = shell.exec("ember g update-ember");
         res.send(cmd);
     });
+    
+    maverickRouter.get('/action/:step', function (req, res) {
+        var params = req.params;
+        var cmd = shell.exec("ember g "+params.step+"");
+        res.send(cmd);
+    });
+    
+    maverickRouter.get('/maverick-file-check/:step', function (req, res) {
+        var params = req.params;
+        var cmd = shell.exec("ember g maverick-file-check "+params.step);
+        res.send(cmd);
+    });
+    
+    maverickRouter.get('/check/:step', function (req, res) {
+        var params = req.params;
+        var cmd = shell.exec("ember g "+params.step+"-check");
+        res.send(cmd);
+    });
 
     maverickRouter.get('/:id', function (req, res) {
         res.send({
