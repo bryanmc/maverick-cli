@@ -58,6 +58,7 @@ module.exports = {
                 fs.writeFileSync(projectBowerFilePath, updatedBowerFileContents);
                 shell.exec("bower install");
                 self.ui.writeLine('{"status":"success", "message":"Ember / bower version successfully updated to 2.2.0"}');  
+
             }
 
         });     
