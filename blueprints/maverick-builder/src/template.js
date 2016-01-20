@@ -37,12 +37,12 @@
 
       <div class="jumbotron">
         <h1>Welcome to Maverick Builder</h1>
-        <p class="lead">A project to help get your Ember CLI app off the ground in record time with all the latest and greatest technologies.</p>
+        <p class="lead">A project to help get your Ember CLI app off the ground in record time with all the latest and greatest technologies baked in for you.</p>
         <p class="hide"><a class="btn btn-lg btn-success" href="#" role="button">Sign up today</a></p>
       </div>
 
       <div class="row marketing">
-        <div class="col-lg-6">
+        <div class="col-lg-7">
             <div class="row">
                 <div class="col-lg-6">
                     <h4>Update Bower Ember & Ember Data Version</h4>
@@ -73,7 +73,19 @@
             <div class="row">
                 <div class="col-lg-6">
                     <h4>UI Setup</h4>
+                    <p class="label label-primary" style="margin: 10px 0 20px 0;">
+                        <a style="color:white;" target="_blank" href="https://github.com/bryanmc/maverick-cli/tree/master/blueprints/maverick-setup-ui">
+                        Source Code</a>
+                    </p>
+                    <hr />
+                    
                     <p>Adds Twitter bootstrap and related UI elements to the project.</p>
+                    <ul class="well step-checklist-items"> 
+                        <li>Installs Ember <a target="_blank" href="https://www.npmjs.com/package/ember-bootstrap">Bootstrap addon</a></li>
+                        <li>Installs Ember <a target="_blank" href="https://www.npmjs.com/package/ember-toastr">Toastr addon</a></li>
+                        <li>Installs Ember <a target="_blank" href="https://github.com/martndemus/ember-cli-font-awesome">Font-Awesome addon</a></li>
+                    </ul>
+                    
                 </div>
                 <div class="col-lg-6">
                     <button {{action "MB_setupUi"}} class="btn btn-block btn-large {{if check_setupUi "btn-success" "btn-default"}}" style="margin-top:10px;">Setup UI & Frameworks</button>
@@ -84,14 +96,107 @@
                     <hr />
                 </div>
             </div>
+            
+            <div class="row">
+                <div class="col-lg-6">
+                    <h4>Implement Maverick Core</h4>
+                    <p class="label label-primary" style="margin: 10px 0 20px 0;">
+                        <a style="color:white;" target="_blank" href="https://github.com/bryanmc/maverick-cli/tree/master/blueprints/maverick-implement-core">
+                        Source Code</a>
+                    </p>
+                    <hr />
+                    
+                    <p>Generates the Maverick services, utilities (eg, core and authentication)</p>
+                    <ul class="well step-checklist-items">
+                        <li>Creates the service: <a href="https://github.com/bryanmc/maverick-cli/blob/484acd7453326396da241b2a2b7f2a080bfd6224/blueprints/maverick-implement-core/src/service.js" target="_blank">Maverick</a></li>
+                        <li>Creates the utility: <a href="https://github.com/bryanmc/maverick-cli/blob/484acd7453326396da241b2a2b7f2a080bfd6224/blueprints/maverick-implement-core/src/utility.js" target="_blank">Maverick</a></li>
+                        <li>Creates the service: <a href="https://github.com/bryanmc/maverick-cli/blob/484acd7453326396da241b2a2b7f2a080bfd6224/blueprints/maverick-implement-core/src/service-authentication.js" target="_blank">Authentication</a></li>
+                        <li>Creates the initializer: <a href="https://github.com/bryanmc/maverick-cli/blob/484acd7453326396da241b2a2b7f2a080bfd6224/blueprints/maverick-implement-core/src/initializer-maverick.js" target="_blank">Maverick</a></li>
+                        <li>Creates the initializer: <a href="https://github.com/bryanmc/maverick-cli/blob/484acd7453326396da241b2a2b7f2a080bfd6224/blueprints/maverick-implement-core/src/initializer-router.js" target="_blank">Router</a></li>
+                        <li>Creates the adapter: <a href="https://github.com/bryanmc/maverick-cli/blob/484acd7453326396da241b2a2b7f2a080bfd6224/blueprints/maverick-implement-core/src/adapter-application.js" target="_blank">Application</a></li>
+                        <li>Creates the serializer: <a href="https://github.com/bryanmc/maverick-cli/blob/484acd7453326396da241b2a2b7f2a080bfd6224/blueprints/maverick-implement-core/src/serializer-application.js" target="_blank">Application</a></li>
+                    </ul>
+                    
+                </div>
+                <div class="col-lg-6">
+                    <button {{action "MB_setupMaverickCore"}} class="btn btn-block btn-large {{if check_setupMaverickCore "btn-success" "btn-default"}}" style="margin-top:10px;">Setup Maverick Core</button>
+                    <p style="margin-top:10px;"><strong>Status:</strong> {{#if check_setupMaverickCore}}Completed{{else}}Incomplete{{/if}}</p>
+                </div>
+                <div class="col-lg-12">
+                    <pre><code class="language-bash">$ ember g maverick-file-check &#x3C;path,comma_separated&#x3E; &#x3C;file name&#x3E;</code></pre>
+                    <hr />
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-6">
+                    <h4>Install Maverick Components</h4>
+                    <p class="label label-primary" style="margin: 10px 0 20px 0;">
+                        <a style="color:white;" target="_blank" href="https://github.com/bryanmc/maverick-cli/tree/master/blueprints/maverick-implement-core">
+                        Source Code</a>
+                    </p>
+                    <hr />
+                    
+                    <p>Installs all core Maverick components</p>
+                    <ul class="well step-checklist-items">
+                        <li>Creates the component: <a href="https://github.com/bryanmc/maverick-cli/blob/484acd7453326396da241b2a2b7f2a080bfd6224/blueprints/maverick-implement-core/src/service.js" target="_blank">Login</a></li>
+                        <li>Creates the controller: <a href="https://github.com/bryanmc/maverick-cli/blob/484acd7453326396da241b2a2b7f2a080bfd6224/blueprints/maverick-implement-core/src/utility.js" target="_blank">Login</a></li>
+                        <li>Creates the route: <a href="https://github.com/bryanmc/maverick-cli/blob/484acd7453326396da241b2a2b7f2a080bfd6224/blueprints/maverick-implement-core/src/service-authentication.js" target="_blank">Login</a></li>
+                        <li>Creates the route: <a href="https://github.com/bryanmc/maverick-cli/blob/484acd7453326396da241b2a2b7f2a080bfd6224/blueprints/maverick-implement-core/src/initializer-maverick.js" target="_blank">Logout</a></li>
+                        <li>Creates the controller: <a href="https://github.com/bryanmc/maverick-cli/blob/484acd7453326396da241b2a2b7f2a080bfd6224/blueprints/maverick-implement-core/src/initializer-maverick.js" target="_blank">Index</a></li>
+                        <li>Creates the route: <a href="https://github.com/bryanmc/maverick-cli/blob/484acd7453326396da241b2a2b7f2a080bfd6224/blueprints/maverick-implement-core/src/initializer-maverick.js" target="_blank">Index</a></li>
+                    </ul>
+                    
+                </div>
+                <div class="col-lg-6">
+                    <button {{action "MB_installMaverickComponents"}} class="btn btn-block btn-large {{if check_installMaverickComponents "btn-success" "btn-default"}}" style="margin-top:10px;">Install Maverick Components</button>
+                    <p style="margin-top:10px;"><strong>Status:</strong> {{#if check_installMaverickComponents}}Completed{{else}}Incomplete{{/if}}</p>
+                </div>
+                <div class="col-lg-12">
+                    <pre><code class="language-bash">$ ember g maverick-components</code></pre>
+                    <hr />
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-6">
+                    <h4>Environment Setup</h4>
+                    <p class="label label-primary" style="margin: 10px 0 20px 0;">
+                        <a style="color:white;" target="_blank" href="https://github.com/bryanmc/maverick-cli/tree/master/blueprints/maverick-implement-core">
+                        Source Code</a>
+                    </p>
+                    <hr />
+                    
+                    <p>Sets up the environment (eg, config files)</p>
+                    <ul class="well step-checklist-items">
+                        <li>Updates the config file: <a href="https://github.com/bryanmc/maverick-cli/blob/484acd7453326396da241b2a2b7f2a080bfd6224/blueprints/maverick-implement-core/src/service.js" target="_blank">Environment.js</a></li>
+                    </ul>
+                    
+                </div>
+                <div class="col-lg-6">
+                    <button {{action "MB_setupEnvironment"}} class="btn btn-block btn-large {{if check_setupEnvironment "btn-success" "btn-default"}}" style="margin-top:10px;">Setup Environment</button>
+                    <p style="margin-top:10px;"><strong>Status:</strong> {{#if check_setupEnvironment}}Completed{{else}}Incomplete{{/if}}</p>
+                </div>
+                <div class="col-lg-12">
+                    <pre><code class="language-bash">$ ember g maverick-environment</code></pre>
+                    <hr />
+                </div>
+            </div>
           
         </div>
 
-        <div class="col-lg-6">
-          <h4>Coming Soon...</h4>
-          <p>A feature that is soon to come of course...</p>
-          
-        </div>
+        <div class="col-lg-5">
+          <h4>Maverick Builder API URL References</h4>
+          <hr />
+          <p><a href="http://localhost:4200/api/maverick/action/update-ember" target="_blank">Action: Update Ember</a></p>
+          <p><a href="http://localhost:4200/api/maverick/check/update-ember" target="_blank">Check: Update Ember</a></p>
+          <p><a href="http://localhost:4200/api/maverick/action/maverick-setup-ui" target="_blank">Action: Setup UI</a></p>
+          <p><a href="http://localhost:4200/api/maverick/maverick-file-check/setup-ui" target="_blank">Check: Setup UI</a></p>
+          <p><a href="http://localhost:4200/api/maverick/action/maverick-implement-core" target="_blank">Action: Implement Core</a></p>
+          <p><a href="http://localhost:4200/api/maverick/maverick-file-check/app,services/maverick.js" target="_blank">Check: Implement Core</a></p>
+          <p><a href="http://localhost:4200/api/maverick/action/maverick-components" target="_blank">Action: Install Components</a></p>
+          <p><a href="http://localhost:4200/api/maverick/maverick-file-check/app,components/login-form.js" target="_blank">Check: Install Components</a></p>
+        </div> 
       </div>
 
       <footer class="hide footer">

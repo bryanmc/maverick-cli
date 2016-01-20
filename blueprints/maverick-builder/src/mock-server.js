@@ -23,9 +23,9 @@ module.exports = function (app) {
         res.send(cmd);
     });
     
-    maverickRouter.get('/maverick-file-check/:step', function (req, res) {
+    maverickRouter.get('/maverick-file-check/:step/:file', function (req, res) {
         var params = req.params;
-        var cmd = shell.exec("ember g maverick-file-check "+params.step);
+        var cmd = shell.exec("ember g maverick-file-check "+params.step+" "+params.file);
         res.send(cmd);
     });
     
