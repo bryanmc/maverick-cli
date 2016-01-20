@@ -46,7 +46,7 @@ module.exports = {
 
         try {
             var templateFile = fs.readFileSync(appFiles.component_login_hbs, 'utf8');
-            if ( templateFile.indexOf('usernamezz') === -1){
+            if ( templateFile.indexOf('username') === -1){
                 //Cause the try statement to error  
                 JSON.parse(templateFile);
             }
@@ -54,13 +54,13 @@ module.exports = {
         } catch (error) {
             console.log("GOT AN ERROR!"); 
             //Install the component blueprint
-            //shell.exec("ember g component login-form");
+            shell.exec("ember g component login-form");
             
             //Install the login / logout routes
-            //shell.exec("ember g route login && ember g route logout");
+            shell.exec("ember g route login && ember g route logout");
             
             //Install the login controller
-            //shell.exec("ember g controller login");
+            shell.exec("ember g controller login");
             
             //Install the index controller
             shell.exec("ember g controller index");
