@@ -1,54 +1,47 @@
+/**
+ * Maverick CLI
+ * Blueprint: maverick-check-file
+ * Check to see if a file exists.
+ * Usage: ember g maverick-file-check <path,comma_separated> <file name>
+ * Example: ember g maverick-file-check bower_components,bootstrap package.json 
+ */
 var fs = require('fs');
 var path = require('path');
 var shell = require("shelljs");
 
 /*jshint node:true*/
 module.exports = {
-    description: 'Checks whether update ember has been performed.',
+    description: 'Checks to see if a given file or directory exists.',
 
     normalizeEntityName: function (entityName) {
         return entityName;
     },
 
-
-
     beforeInstall: function (options) {
         var self = this; 
-        
-        if ( options.args.length > 1 ){
+
+        if ( options.args.length > 2 ){
+            var rootPath = this.project.root;
+            
+            //File Path
             var step = options.args[1];
+            var filePath = step.replace(',', '/');
             
-            var self = this;
-            var bowerPath = path.join(this.project.root, 'bower_components');
-            var bowerBootstrapPath = path.join(bowerPath, 'bootstrap');
-            var bowerBootstrapFile  = path.join(bowerBootstrapPath, 'package.json');
+            //Full Path
+            var fileName = options.args[2];
+            var checkFile = path.join(rootPath, filePath, fileName);
             
-            var appPath = path.join(this.project.root, 'app');
-            var servicesPath = path.join(appPath, 'services');
-            var appServiceFile = path.join(servicesPath, 'maverick.js');
-        
-            switch(step){
-                case "setup-ui":
-                    try {
-                        fs.readFileSync(bowerBootstrapFile, 'utf8');
-                        self.ui.writeLine('{"status":"success", "message":"File exists!"}');
-                    } catch (error) {
-                        self.ui.writeLine('{"status":"fail", "message":"No file exists"}');
-                    }
-                 break;
-                case "implement-core":
-                    try {
-                        fs.readFileSync(appServiceFile, 'utf8');
-                        self.ui.writeLine('{"status":"success", "message":"File exists!"}');
-                    } catch (error) {
-                        self.ui.writeLine('{"status":"fail", "message":"No file exists"}');
-                    }
-                 break;
+            try {
+                fs.readFileSync(checkFile, 'utf8');
+                self.ui.writeLine('{"status":"success", "message":"File exists: "'+checkFile+'}');
+            } catch (error) {
+                self.ui.writeLine('{"status":"fail", "message":"No file exists: "'+checkFile+'}');
             }
+
         }else{
-            self.ui.writeLine('{"status":"fail", "message":"No valid step argument was passed in"}');
+            self.ui.writeLine('{"status":"fail", "message":"Invalid arguments were provided:"}');
+            console.log('Arguments:', options.args); 
         }
-        //console.log('options', options); 
 
     }
 };

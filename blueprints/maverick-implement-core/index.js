@@ -4,7 +4,7 @@ var shell = require("shelljs");
 
 /*jshint node:true*/
 module.exports = {
-    description: 'Create a GUI for Maverick',
+    description: 'Generates the Maverick services, utilities (eg, core and authentication)',
 
     normalizeEntityName: function (entityName) {
         return entityName;
@@ -65,7 +65,7 @@ module.exports = {
             fs.writeFileSync(appAdapterAppFile, srcAdapterAppFile);
             fs.writeFileSync(appSerializerAppFile, srcSerializerAppFile);
                 
-            self.ui.writeLine('{"status":"success", "message":"Maverick Core Implementation step complete');
+            self.ui.writeLine('{"status":"success", "message":"Maverick Core Implementation step complete"}');
         }
     }
 };
