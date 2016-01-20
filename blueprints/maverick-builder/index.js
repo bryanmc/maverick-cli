@@ -44,73 +44,61 @@ module.exports = {
     normalizeEntityName: function (entityName) {
         return entityName;
     },
-    
+
     beforeInstall: function () {
         var self = this;
-        var appPath = path.join(this.project.root, 'app');
-        var serverPath = path.join(this.project.root, 'server/mocks');
-        var routesPath = path.join(appPath, 'routes');
-        var templatesPath = path.join(appPath, 'templates');
-        var appRouterFile = path.join(appPath, 'router.js');
-        var appRouteFile = path.join(routesPath, 'maverick-builder.js');
-        var appTemplateFile = path.join(templatesPath, 'maverick-builder.hbs');
-        var appServerMocksFile = path.join(serverPath, 'maverick.js');
 
-        var nodeModsPath = path.join(this.project.root, 'node_modules');
+        var rootPath = this.project.root;
+        var appPath = path.join(this.project.root, 'app');
+
+        var appFiles = {
+            templates_mb: path.join(appPath, 'templates/maverick-builder.hbs'),
+            routes_mb: path.join(appPath, 'routes/maverick-builder.js'),
+            app_router: path.join(appPath, 'router.js'),
+            server_mocks_mb: path.join(rootPath, 'server/mocks/maverick.js')
+        };
+
+        var nodeModsPath = path.join(rootPath, 'node_modules');
         var addonPath = path.join(nodeModsPath, 'maverick-cli');
         var addonBlueprintsPath = path.join(addonPath, 'blueprints');
         var addonBlueprintSrcPath = path.join(addonBlueprintsPath, '/maverick-builder/src');
-        var addonBlueprintSrcRouterFile = path.join(addonBlueprintSrcPath, 'router.js');
-        var addonBlueprintSrcTemplateFile = path.join(addonBlueprintSrcPath, 'template.js');
-        var addonBlueprintSrcRouteFile = path.join(addonBlueprintSrcPath, 'route.js');
-        var addonBlueprintSrcServerMocksFile = path.join(addonBlueprintSrcPath, 'mock-server.js');
-        
-        // console.log('App Router File', appRouterFile); 
-        // console.log('Addon Blueprint MB Src Router File', addonBlueprintSrcRouterFile); 
+
+        var srcFiles = {
+            templates_mb: path.join(addonBlueprintSrcPath, 'templates-maverick-builder.hbs'),
+            routes_mb: path.join(addonBlueprintSrcPath, 'routes-maverick-builder.js'),
+            app_router: path.join(addonBlueprintSrcPath, 'router.js'),
+            server_mocks_mb: path.join(addonBlueprintSrcPath, 'server-mocks-maverick.js')
+        };
         
         try {
-            fs.readFileSync(appRouteFile, 'utf8');
-            self.ui.writeLine("Skipping: The Maverick Builder route already exists...");
+            fs.readFileSync(appFiles.templates_mb, 'utf8');
+            self.ui.writeLine('{"status":"success", "message":"Maverick Builder Setup step was already completed."}');
         } catch (error) {
-            self.ui.writeLine("Creating: New `maverick-builer` route...");  
-            try {
-                var srcRouterFile = fs.readFileSync(addonBlueprintSrcRouterFile, 'utf8');
-                var srcTemplateFile = fs.readFileSync(addonBlueprintSrcTemplateFile, 'utf8'); 
-                var srcRouteFile = fs.readFileSync(addonBlueprintSrcRouteFile, 'utf8'); 
-                var srcServerMocksFile = fs.readFileSync(addonBlueprintSrcServerMocksFile, 'utf8'); 
-                //Writer Router.js template file to source
-                fs.writeFileSync(appRouterFile, srcRouterFile);
-                fs.writeFileSync(appTemplateFile, srcTemplateFile);
-                fs.writeFileSync(appRouteFile, srcRouteFile);
+
+            //Generate HTTP mock server
+            shell.exec("ember g http-mock maverick");
+
+            //Install required dependencies
+            shell.exec("npm install --save shelljs");
                 
-                //Run Ember generate for route
-                //shell.exec("ember g route maverick-builder");  
-                
-                //Generate HTTP mock server
-                shell.exec("ember g http-mock maverick");
-                fs.writeFileSync(appServerMocksFile, srcServerMocksFile);
-                
-                 //Install required dependencies
-                shell.exec("npm install --save shelljs");
-                
-                //Run initial Ember update
-                shell.exec("ember g update-ember");
-                
-            } catch (error) {
-                self.ui.writeLine("Failure: Creating the maverick-builder route failed in the last step...");
+            //Run initial Ember update
+            shell.exec("ember g update-ember");
+            
+            //Write all files   
+            for (var key in appFiles) {
+                if (appFiles.hasOwnProperty(key)) {
+                    var appFile = appFiles[key];
+                    var srcFilePath = srcFiles[key];
+                    var srcFile = fs.readFileSync(srcFilePath, 'utf8');
+                    //Write file...
+                    fs.writeFileSync(appFile, srcFile);
+                }
             }
+            
+            self.ui.writeLine('{"status":"success", "message":"Maverick Builder Setup step complete"}');
+
         }
 
     }
 
-  // locals: function(options) {
-  //   // Return custom template variables here.
-  //   return {
-  //     foo: options.entity.options.foo
-  //   };
-  // }
-
-  // afterInstall: function(options) {
-  //   // Perform extra work here.
-  // }
 };
