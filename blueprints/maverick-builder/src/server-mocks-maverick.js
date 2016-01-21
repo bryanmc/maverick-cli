@@ -4,34 +4,71 @@
  */
 module.exports = function (app) {
     var express = require('express');
+    var bodyParser = require('body-parser');
     var maverickRouter = express.Router();
     var shell = require('shelljs');
+    var fs = require('fs');
+    
+    app.use(bodyParser.urlencoded());
+    app.use(bodyParser.json());
 
     maverickRouter.get('/', function (req, res) {
         //shell.exec("ember g maverick-builder");
         res.send({ project: { id: 1, number: 123, name: 'Fooshnickins' } });
     });
+
+    maverickRouter.get('/read-file/:path', function (req, res) {
+        var srcFilePath = req.params.path;
+        srcFilePath = srcFilePath.replace(/,/g, '/');
+        try {
+            var contents = fs.readFileSync(srcFilePath, 'utf8');
+            res.send(contents);
+        } catch (error) {
+            res.send("No file found: "+srcFilePath);
+        }
+    });
     
+    maverickRouter.get('/generate-blueprint/:name/:type', function (req, res) {
+        var name = req.params.name;
+        var type = req.params.type;
+        
+        shell.exec("ember g "+type+" "+name);
+        
+        res.send({"status": "success"});
+    });
+    
+    maverickRouter.post('/save-file', function (req, res) {
+        var body = req.body;
+        var filePath = body.filePath.replace(/,/g, '/');
+        if ( typeof body.content !== 'undefined' ){
+            var contents = body.content;
+            fs.writeFileSync(filePath, contents);
+            res.send({contents: contents, file: filePath});
+        }else{
+            res.send("empty file");
+        }
+    });
+
     maverickRouter.get('/update-ember', function (req, res) {
         var cmd = shell.exec("ember g update-ember");
         res.send(cmd);
     });
-    
+
     maverickRouter.get('/action/:step', function (req, res) {
         var params = req.params;
-        var cmd = shell.exec("ember g "+params.step+"");
+        var cmd = shell.exec("ember g " + params.step + "");
         res.send(cmd);
     });
-    
+
     maverickRouter.get('/maverick-file-check/:step/:file', function (req, res) {
         var params = req.params;
-        var cmd = shell.exec("ember g maverick-file-check "+params.step+" "+params.file);
+        var cmd = shell.exec("ember g maverick-file-check " + params.step + " " + params.file);
         res.send(cmd);
     });
-    
+
     maverickRouter.get('/check/:step', function (req, res) {
         var params = req.params;
-        var cmd = shell.exec("ember g "+params.step+"-check");
+        var cmd = shell.exec("ember g " + params.step + "-check");
         res.send(cmd);
     });
 
@@ -52,6 +89,6 @@ module.exports = function (app) {
     // After installing, you need to `use` the body-parser for
     // this mock uncommenting the following line:
     //
-    //app.use('/api/maverick', require('body-parser'));
+    
     app.use('/api/maverick', maverickRouter);
 };

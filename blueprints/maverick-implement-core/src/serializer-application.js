@@ -5,7 +5,7 @@ import DS from 'ember-data';
 
 export default DS.JSONSerializer.extend({
     /**
-     * Set up custome primary key for 'objectId' which Parse uses instead of 'id' or '_id' 
+     * Set up custom primary key for 'objectId' which Parse uses instead of 'id' or '_id' 
      */
     primaryKey: 'objectId',
     

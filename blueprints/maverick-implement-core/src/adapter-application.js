@@ -10,7 +10,7 @@ export default DS.RESTAdapter.extend({
     namespace: '1',
     pathForType: function(type) {
         if ( type === 'user' ){
-            return this._super(...arguments);;
+            return this._super(...arguments);
         }else{
             let path = Ember.String.pluralize(type);
             path = 'classes/' + Ember.String.classify(path);
