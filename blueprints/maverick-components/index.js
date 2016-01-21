@@ -24,7 +24,9 @@ module.exports = {
             routes_logout: path.join(appPath, 'routes/logout.js'),
             controllers_index: path.join(appPath, 'controllers/index.js'),
             controllers_application: path.join(appPath, 'controllers/application.js'),
-            templates_application_hbs: path.join(appPath, 'templates/application.hbs')
+            templates_application_hbs: path.join(appPath, 'templates/application.hbs'),
+            component_mb_hbs: path.join(appPath, 'templates/components/maverick-editor.hbs'),
+            component_mb_js: path.join(appPath, 'components/maverick-editor.js'),
         };
 
         var nodeModsPath = path.join(this.project.root, 'node_modules');
@@ -41,7 +43,9 @@ module.exports = {
             routes_logout: path.join(addonBlueprintSrcPath, 'routes-logout.js'),
             controllers_index: path.join(addonBlueprintSrcPath, 'controllers-index.js'),
             controllers_application: path.join(addonBlueprintSrcPath, 'controllers-application.js'),
-            templates_application_hbs: path.join(addonBlueprintSrcPath, 'templates-application.hbs')
+            templates_application_hbs: path.join(addonBlueprintSrcPath, 'templates-application.hbs'),
+            component_mb_hbs: path.join(addonBlueprintSrcPath, 'components-maverick-editor.hbs'),
+            component_mb_js: path.join(addonBlueprintSrcPath, 'components-maverick-editor.js'),
         };
 
         try {

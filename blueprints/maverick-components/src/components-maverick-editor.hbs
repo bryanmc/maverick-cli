@@ -1,0 +1,427 @@
+<!--### Editor Markup ###-->
+
+<div id="maverick-editor">
+    <div id="maverick-editor-handler">{{fa-icon "expand" size="lg"}}</div>
+    
+    <pre id="editor"></pre>
+    <span id="editor-file-path" data-file-path=""></span>
+    
+    <div id="maverick-editor-options">
+        <div style="font-size:1.5em;margin-bottom:20px; cursor:pointer;">
+            <span class="label label-success">Files</span>
+            <span class="label label-default">Components</span>
+            <span class="label label-default">Generator</span>
+        </div>
+        
+        <div class="row">
+            
+             <div class="col-lg-6">
+                <h5>Route Files: {{currentRouteName}}<hr /></h5>
+                <ul class="route-file-list">
+                    <li data-file-path="app,controllers,{{currentRouteName}}.js">{{fa-icon "file-text"}} {{currentRouteName}} controller</li>
+                    <li data-file-path="app,routes,{{currentRouteName}}.js">{{fa-icon "file-text"}} {{currentRouteName}} route</li>
+                    <li data-file-path="app,templates,{{currentRouteName}}.hbs">{{fa-icon "file-text"}} {{currentRouteName}} template</li>
+                </ul>
+            </div>
+            
+            <div class="col-lg-6">
+                <h5>Application Files<hr /></h5>
+                <ul class="route-file-list">
+                    <li data-file-path="config,environment.js">{{fa-icon "file-text"}} environment config</li>
+                    <li data-file-path="app,controllers,application.js">{{fa-icon "file-text"}} application controller</li>
+                    <li data-file-path="app,templates,application.hbs">{{fa-icon "file-text"}} application template</li>
+                    <li data-file-path="app,adapters,application.js">{{fa-icon "file-text"}} application adapter</li>
+                    <li data-file-path="app,serializers,application.js">{{fa-icon "file-text"}} application serializer</li>
+                    <li data-file-path="app,styles,app.css">{{fa-icon "file-text"}} application CSS</li>
+                    <li data-file-path="server,mocks,maverick.js">{{fa-icon "file-text"}} HTTP mock server</li>
+                    <li data-file-path="app,components,maverick-editor.js">{{fa-icon "file-text"}} maverick editor js</li>
+                    <li data-file-path="app,templates,components,maverick-editor.hbs">{{fa-icon "file-text"}} maverick editor hbs</li>
+                    <li data-file-path="app,components,embeddable-tweet.js">{{fa-icon "file-text"}} tweet js</li>
+                    <li data-file-path="app,templates,components,embeddable-tweet.hbs">{{fa-icon "file-text"}} tweet hbs</li>
+                </ul>
+            </div>
+            
+        </div>
+        
+        <div class="row">
+            
+             <div class="col-lg-12">
+                <h5>Blueprint Generator<hr /></h5>
+                <form id="blueprint_gen_form" class="form-inline">
+                    <div class="form-group input-group-sm">
+                        <input name="name" type="text" class="form-control" placeholder="Blueprint Name">
+                    </div>
+                    <div class="form-group input-group-sm">
+                        <select name="type" class="form-control">
+                            <option>-- Select  --</option>
+                            <option>Route</option>
+                            <option>Controller</option>
+                            <option>Model</option>
+                            <option>Component</option>
+                            <option>Adapter</option>
+                            <option>Initializer</option>
+                            <option>Resource</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-default btn-sm">Generate</button>
+                </form>
+                
+                <!-- Command Line -->
+                <hr />
+                <form id="command_line_form" class="form-inline">
+                    <div class="form-group input-group-sm">
+                        <input autocomplete="off" name="content" type="text" class="form-control" placeholder="$ terminal command">
+                    </div>
+                    <button type="submit" class="btn btn-default btn-sm">Send</button>
+                </form>
+                
+            </div>
+            
+        </div>
+        
+    </div>
+    
+</div>
+
+<!--### Editor Styles ###-->
+<style>
+    
+    .route-file-list li {
+        cursor: pointer;
+        color: #ccc;
+    }
+    #maverick-editor-handler {
+        margin: 0;
+        position: relative;
+        top:-40px;
+        right: 0;
+        width:40px;
+        height: 40px;
+        padding:10px;
+        color: #fff;
+        background: #006A86;
+        z-index: 1000000;
+        float:right;
+        text-align: center;
+        cursor: pointer;
+    }
+    #maverick-editor {
+        background: #202020;
+        margin: 0;
+        position: fixed;
+        top:60%;
+        bottom:0;
+        left: 0;
+        width: 100%;
+        z-index: 100000;
+    }
+    #editor {
+        margin: 0;
+        position: fixed;
+        top: 60%;
+        bottom: 0;
+        left: 0;
+        right: 500px;
+        z-index: 100000;
+        border: none;
+        border-top: 20px solid #272822;
+        border-radius: 0;
+        font-weight: bold;
+        font-size: 14px;
+    }
+    #maverick-editor-options {
+        margin: 0;
+        position: fixed;
+        top:60%;
+        bottom:0;
+        right: 0;
+        width:500px;
+        padding:20px 20px 20px 20px;
+        color: #fff;
+        overflow-y: auto;
+    }
+</style>
+
+<!--### Editor Config ###-->
+    <script>        
+        /**
+         * Setup the appPrefix variable which
+         * will be used as a unique ID for the app
+         * where required, such as the cookie which 
+         * store the Maverick editor data, so that
+         * multiple projects may be worked on under
+         * the same domain.
+         */
+        var appPrefix = "{{appPrefix}}";
+        
+        /**
+         * Setup other required variables
+         */
+        var readFileEndpoint = "/api/maverick/read-file/";
+        var saveFileEndpoint = "/api/maverick/save-file/";
+        var commandLineEndpoint = "/api/maverick/command-line/";
+        var editor = ace.edit("editor");
+        
+        
+        /**
+         * Get the editor state from saved cookie and then 
+         * use the currentFile property to set the last file open
+         * to the editor via `loadEditorFile` and the file's path
+         * eg: app,templates,application.hbs - commas replace regular
+         * forward slashes so that it can be passed in a backend
+         * route which transforms it to proper format, and retrieves
+         * the file via the `fs` module.
+         */
+        var maverickEditorState = getMaverickEditor();
+        if ( typeof maverickEditorState.currentFile !== 'undefined' ){
+            loadEditorFile(maverickEditorState.currentFile)
+        }
+        
+        /**
+         * Setup the editor, adding commands, setting the theme and
+         * default syntax highlighting mode.
+         */
+        editor.commands.addCommand({
+            name: 'saveFiles',
+            bindKey: {win: 'Ctrl-S',  mac: 'Command-S'},
+            exec: function(editor) {
+                console.log("Keyboard shortcut: save");
+                saveEditorFile();
+            },
+            readOnly: true // false if this command should not apply in readOnly mode
+        });
+        editor.setTheme("ace/theme/monokai");
+        editor.session.setMode("ace/mode/javascript");
+        
+        /**
+         * Setup cursor change listener, and uses flag to make sure it 
+         * doesn't run on the page load as it wants to do.  Running on page
+         * load overwrites the cursor position from before page refresh, 
+         * but by preventing we maintain the cursor position before page refresh
+         * and then re-set it properly.
+         */
+        var loadedOnce = true;
+        editor.getSession().selection.on('changeCursor', function(e) {
+            if ( loadedOnce === true ){
+                //Don't do anything on first load, just reset the flag...
+                loadedOnce = false;
+            }else{
+                var cursor = editor.selection.getCursor();
+                //Get the current editor settings from cookie
+                var editorSettings = getMaverickEditor();       
+                //Update editor setting properties
+                editorSettings.currentLine = cursor;      
+                //Save the editor state to cookie
+                saveMaverickEditor(editorSettings);
+            }   
+ 
+        });
+        
+        /**
+         * Loads a file into the editor based on the file path
+         * given, where commas replace normal forward slashes as explained
+         * above.
+         */
+        function loadEditorFile(file, lineNumber){
+            var fullFilePath = readFileEndpoint+file;
+            var goToLine = lineNumber;
+            
+            $.ajax({
+                url: fullFilePath
+            }).done(function(res) {
+                //Set editor content to response
+                editor.setValue(res);
+                
+                //Set line number
+                var maverickEditorState = getMaverickEditor();
+
+                if ( !goToLine && typeof maverickEditorState.currentFile !== 'undefined' ){
+                    var lineNumber = maverickEditorState.currentLine.row;
+                    editor.gotoLine(lineNumber);
+                }else{
+                    editor.gotoLine(goToLine || 0);
+                }
+                
+                //Set editor syntax mode based on file name
+                setEditorMode(file);
+                
+                //Update span element which tracks the current file
+                $("#editor-file-path").data('file-path', file);
+                
+                //Get the current editor settings from cookie
+                var editorSettings = getMaverickEditor();
+                
+                //Update editor setting properties
+                editorSettings.currentFile = file;
+                editorSettings.currentFileEndpoint = fullFilePath;
+                editorSettings.currentLine = editor.selection.getCursor();
+                
+                //Save the editor state to cookie
+                saveMaverickEditor(editorSettings);
+                
+            }).fail(function(res){
+                console.log('File read error:', res);
+            });
+        }
+        
+        /**
+         * Reads the `maverick_editor_state` cookie returns the editor
+         * settings / state from cookie.
+         */
+        function getMaverickEditor(){
+            var editor;
+            var editorCookie = $.cookie('maverick_editor_state');
+            
+            if ( !editorCookie ){
+                editor = {};
+            }else{
+                editor = JSON.parse(editorCookie);
+                editor = editor[appPrefix];
+            }
+
+            return editor;
+        }
+        
+        /**
+         * Saves the editor state / settings to the `maverick_editor_state`
+         * cookie.
+         */
+        function saveMaverickEditor(settings){
+            var saveObject = {};
+            saveObject[appPrefix] = settings;
+
+            //Transform the current file path for saving
+            if ( typeof saveObject[appPrefix].currentFile !== 'undefined' ){
+                var currentFile = saveObject[appPrefix].currentFile;
+                saveObject[appPrefix].currentFilePathized = currentFile.replace(/,/g, '/');
+            }
+            
+            saveObject = JSON.stringify(saveObject);
+
+            $.cookie('maverick_editor_state', saveObject);
+        }
+        
+        /**
+         * Triggered by the "CMD+S" hotkey command setup on the editor, this
+         * grabs the current editor content and posts it to the backend
+         * route along with the target file's path, overwriting the existing
+         * file with the new content.
+         */
+        function saveEditorFile(){
+            var filePath = $("#editor-file-path").data('file-path');
+
+            $.ajax({
+                method: "POST",
+                url: saveFileEndpoint,
+                data: { content: editor.getValue(), filePath: filePath }
+            }).done(function(res) {
+                console.log('File save success:', res);
+            }).fail(function(res){
+                console.log('File save error:', res);
+            });
+        }
+        
+        /**
+         * Sets the current editor session's mode based on the file extension.
+         */
+        function setEditorMode(file){
+            if ( file.indexOf('.hbs') > -1 ){
+                editor.getSession().setMode("ace/mode/handlebars");
+            }else if ( file.indexOf('.js') > -1  ){
+                editor.getSession().setMode("ace/mode/javascript");
+            }else if ( file.indexOf('.html') > -1  ){
+                editor.getSession().setMode("ace/mode/html");
+            }else if ( file.indexOf('.css') > -1  ){
+                editor.getSession().setMode("ace/mode/css");
+            }else{
+                editor.getSession().setMode("ace/mode/text");
+            }
+        }
+        
+        /**
+         * Set the body extra bottom padding to the height of the editor so that
+         * we can scroll to the bottom of the page properly.
+         */
+         setBodyPaddingEditor();
+        function setBodyPaddingEditor(){
+            var editorHeight = $("#maverick-editor").height();
+            console.log("editor height", editorHeight);
+            $("body").css({"padding-bottom": editorHeight+"px"});
+        }
+        
+        /**
+         * Click handler to expand and minimize the editor GUI
+         */
+        $("#maverick-editor-handler").on('click', function(){
+            if ( $(this).hasClass("minimized") ){
+                $(this).removeClass("minimized");
+                $('#maverick-editor, #editor, #maverick-editor-options').animate({
+                    top: "60%"
+                }, 500, function(){
+                    setBodyPaddingEditor();
+                });
+            }else{
+                $(this).addClass("minimized");
+                $('#maverick-editor, #editor, #maverick-editor-options').animate({
+                    top: "100%"
+                }, 500, function(){
+                    setBodyPaddingEditor();
+                });
+            }
+        });
+        
+        /**
+         * Click handler to load an editor file when clicked on from the list
+         * in the editor GUI.
+         */
+        $("ul.route-file-list li").on('click', function(){
+            var file = $(this).data('file-path');
+            loadEditorFile(file, 1);
+        });
+        
+        /**
+         * Click handler for blueprint generator form submission
+         */
+        $("#blueprint_gen_form").on('submit', function(e){
+            e.preventDefault();
+            var endpoint = blueprintGenEndpoint;
+            var array = $( this ).serializeArray();
+            
+            var name = array[0].value;
+            var type = array[1].value;
+            
+            endpoint = endpoint+name.toLowerCase()+"/"+type.toLowerCase();
+            
+            $.ajax({
+                url: endpoint
+            }).done(function(res) {
+                alert("New "+type+" generated successfully!"); 
+            }).fail(function(res){
+                alert("Blueprint generation error");
+                console.log('Blueprint Generation error:', res);
+            });
+            
+        });
+        
+        $("#command_line_form").on('submit', function(e){
+            e.preventDefault();
+            var endpoint = commandLineEndpoint;
+            var array = $( this ).serializeArray();
+            
+            var content = array[0].value;
+            
+            $.ajax({
+                method: "POST",
+                url: endpoint,
+                data: { content: content }
+            }).done(function(res) {
+                alert("Command executed successfully!"); 
+                console.log("Command execution result:", res);
+            }).fail(function(res){
+                alert("Command execution error");
+                console.log('Command execution error:', res);
+            });
+            
+        });
+        
+    </script>

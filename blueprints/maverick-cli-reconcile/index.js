@@ -55,7 +55,9 @@ module.exports = {
             routes_logout: path.join(appPath, 'routes/logout.js'),
             controllers_index: path.join(appPath, 'controllers/index.js'),
             controllers_application: path.join(appPath, 'controllers/application.js'),
-            templates_application_hbs: path.join(appPath, 'templates/application.hbs')
+            templates_application_hbs: path.join(appPath, 'templates/application.hbs'),
+            component_mb_hbs: path.join(appPath, 'templates/components/maverick-editor.hbs'),
+            component_mb_js: path.join(appPath, 'components/maverick-editor.js')
         };
         
 
@@ -96,7 +98,9 @@ module.exports = {
             routes_logout: path.join(addonComponentsBlueprintSrcPath, 'routes-logout.js'),
             controllers_index: path.join(addonComponentsBlueprintSrcPath, 'controllers-index.js'),
             controllers_application: path.join(addonComponentsBlueprintSrcPath, 'controllers-application.js'),
-            templates_application_hbs: path.join(addonComponentsBlueprintSrcPath, 'templates-application.hbs')
+            templates_application_hbs: path.join(addonComponentsBlueprintSrcPath, 'templates-application.hbs'),
+            component_mb_hbs: path.join(addonComponentsBlueprintSrcPath, 'components-maverick-editor.hbs'),
+            component_mb_js: path.join(addonComponentsBlueprintSrcPath, 'components-maverick-editor.js')
         };
         
         for (var key in appFiles) {

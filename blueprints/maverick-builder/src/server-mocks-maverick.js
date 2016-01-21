@@ -48,6 +48,16 @@ module.exports = function (app) {
             res.send("empty file");
         }
     });
+    
+    maverickRouter.post('/command-line', function (req, res) {
+        var body = req.body;
+        if ( typeof body.content !== 'undefined' ){
+            var output = shell.exec(body.content);
+            res.send({"status":"success", "output": output, "command": body.content});
+        }else{
+            res.send({"status":"error", "message":"no command provided"});
+        }
+    });
 
     maverickRouter.get('/update-ember', function (req, res) {
         var cmd = shell.exec("ember g update-ember");
