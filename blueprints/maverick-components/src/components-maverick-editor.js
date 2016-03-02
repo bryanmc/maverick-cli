@@ -18,5 +18,4 @@ export default Ember.Component.extend({
     setupController: function(){
         currentRouteName: "index"
     }
-    
 });

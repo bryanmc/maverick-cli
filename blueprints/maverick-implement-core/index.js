@@ -54,9 +54,13 @@ module.exports = {
             var srcServiceAuthenticationFile = fs.readFileSync(addonBlueprintSrcServiceAuthenticationFile, 'utf8');
             var srcInitializerMaverickFile = fs.readFileSync(addonBlueprintSrcInitializerMaverickFile, 'utf8');
             var srcInitializerRouterFile = fs.readFileSync(addonBlueprintSrcInitializerRouterFile, 'utf8');
+            
+            /**
+             * Remove old adapter and serializer generation
             var srcAdapterAppFile = fs.readFileSync(addonBlueprintSrcAdapterAppFile, 'utf8');
             var srcSerializerAppFile = fs.readFileSync(addonBlueprintSrcSerializerAppFile, 'utf8');
-
+            */
+            
             fs.writeFileSync(appServiceFile, srcServiceFile);
             fs.writeFileSync(appUtilityFile, srcUtilityFile);
             fs.writeFileSync(appServiceAuthenticationFile, srcServiceAuthenticationFile);
@@ -67,5 +71,8 @@ module.exports = {
                 
             self.ui.writeLine('{"status":"success", "message":"Maverick Core Implementation step complete"}');
         }
+        
+        //Install Parse Adapter
+        shell.exec("ember install ember-parse-adapter");
     }
 };

@@ -1,0 +1,1 @@
+export { default } from 'maverick-cli/components/maverick-about';

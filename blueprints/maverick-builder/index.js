@@ -80,6 +80,7 @@ module.exports = {
 
             //Install required dependencies
             shell.exec("npm install --save shelljs");
+            shell.exec("npm install --save-dev path");
             shell.exec("npm install --save-dev body-parser");
                 
             //Run initial Ember update

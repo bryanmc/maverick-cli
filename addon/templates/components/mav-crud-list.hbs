@@ -1,0 +1,12 @@
+<div class="maverick-crud-list">
+    {{#if isAutoStructured}}
+
+            {{mav-crud-list-row records=records component=component}}
+            <!--{{outletd}}-->
+    {{else}}
+        <!--<p>Self Structured</p> {{config.testings}}
+        {{yield}}-->
+        <p>No Auto Structure</p>
+    {{/if}}
+    
+</div>

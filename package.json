@@ -50,5 +50,12 @@
   },
   "ember-addon": {
     "configPath": "tests/dummy/config"
-  }
+  },
+  "gitHead": "f3f09d5240e45979dbacaf5717a6d315ebee33c1",
+  "readme": "# Maverick-cli\n\nThis README outlines the details of collaborating on this Ember addon.\n\n## Installation\n\n* `git clone` this repository\n* `npm install`\n* `bower install`\n\n## Running\n\n* `ember server`\n* Visit your app at http://localhost:4200.\n\n## Running Tests\n\n* `npm test` (Runs `ember try:testall` to test your addon against multiple Ember versions)\n* `ember test`\n* `ember test --server`\n\n## Building\n\n* `ember build`\n\nFor more information on using ember-cli, visit [http://www.ember-cli.com/](http://www.ember-cli.com/).\n# maverick-cli\n",
+  "readmeFilename": "README.md",
+  "_id": "maverick-cli@0.0.0",
+  "_shasum": "4a4d256672ef14b80e847e78dcd8672b14f5e34d",
+  "_from": "git+https://github.com/bryanmc/maverick-cli.git#f3f09d5240e45979dbacaf5717a6d315ebee33c1",
+  "_resolved": "git+https://github.com/bryanmc/maverick-cli.git#f3f09d5240e45979dbacaf5717a6d315ebee33c1"
 }

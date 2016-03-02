@@ -22,10 +22,18 @@ module.exports = {
         return entityName;
     },
 
-    beforeInstall: function () {
-        
+    beforeInstall: function (options) {    
+        var dryRun = false;
         var rootPath = this.project.root;
         var appPath = path.join(this.project.root, 'app');
+
+        if ( options.args.length > 1 ){
+            var args = options.args;
+            if ( args[1] === 'dry' || args[1] === 'd' ){
+                dryRun = true;
+                console.log("Dry run...");
+            }
+        }
 
         var appFiles = {
             //Maverick Builder
@@ -41,8 +49,8 @@ module.exports = {
             app_services_authentication: path.join(appPath, 'services/authentication.js'),
             app_initializers_maverick: path.join(appPath, 'initializers/maverick.js'),
             app_initializers_router: path.join(appPath, 'initializers/router.js'),
-            app_adapters_application: path.join(appPath, 'adapters/application.js'),
-            app_serializers_application: path.join(appPath, 'serializers/application.js'),
+            // app_adapters_application: path.join(appPath, 'adapters/application.js'), //removed, no longer used
+            // app_serializers_application: path.join(appPath, 'serializers/application.js'), //removed, no longer used
             //Environment
             //config_environment: path.join(rootPath, 'config/environment.js'), //TODO: deal with partial files
             //config_maverick: path.join(rootPath, 'config/maverick.js'), empty, unused for now
@@ -112,7 +120,9 @@ module.exports = {
                     console.log("Success! Found file!");
                     console.log("---------------------------");
                     //Write file...
-                    fs.writeFileSync(srcFilePath, appFileContents);
+                    if ( !dryRun ){
+                        fs.writeFileSync(srcFilePath, appFileContents);   
+                    }                    
                 } catch (error) {
                     console.log("Error!", error);
                     console.log("---------------------------");

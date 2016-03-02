@@ -1,0 +1,43 @@
+<!--<button class="btn btn-default"><i class="glyphicon glyphicon-play"></i> Play</button>-->
+{{!--<button class="hide btn btn-default"><i class="glyphicon glyphicon-pause"></i> Pause</button>--}}
+<!--<hr />-->
+
+<div class="col-lg-4">
+    <div class="widget widget-pie">
+        <div class="widget-head"><span class="title">{{record.name}}</span><hr /></div>
+        <div class="row">
+            <div class="col-md-12">
+                {{#if component.webThumbEnabled}}
+                    <div style="max-height:175px;overflow:hidden;">
+                        <center><img class="img-thumbnail" src="http://free.pagepeeker.com/v2/thumbs.php?size=l&url={{record.webUrl}}" /></center>
+                    </div>
+                {{/if}}
+                <div style="margin-top:10px;" role="alert" class="hide alert alert-info alert-icon alert-dismissible">
+                    <div class="icon"><i class="fa fa-info"></i></div>
+                    <div class="message">
+                        <button type="button" data-dismiss="alert" aria-label="Close" class="close"><span aria-hidden="true" class="s7-close"></span></button>This is a store filled with an assortment of different products ready to ship out!
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row chart-info">
+            <div class="col-xs-12"> {{isEditing}}
+                {{#if component.deleteButtonEnabled}}
+                    <button title="Delete {{component.labels.c_singular}}" type="button" class="btn btn-space btn-danger btn-rounded pull-left"><i class="fa fa-trash"></i></button>
+                {{/if}}
+                {{#if component.cloneButtonEnabled}}
+                    <button title="Clone {{component.labels.c_singular}}" type="button" class="btn btn-space btn-default btn-rounded pull-left"><i class="fa fa-clone"></i></button>
+                {{/if}}
+                {{#if component.refreshButtonEnabled}}
+                    <button title="Refresh {{component.labels.c_singular}}" type="button" class="btn btn-space btn-default btn-rounded pull-left"><i class="fa fa-refresh"></i></button>
+                {{/if}}
+                {{#if component.externalLinkButtonEnabled}}
+                    <a href="{{record.webUrl}}" target="_blank"><button title="Open Site" type="button" class="btn btn-space btn-default btn-rounded pull-left"><i class="fa fa-external-link"></i></button></a>
+                {{/if}}
+                {{#if component.loadButtonEnabled}}
+                    {{#link-to 'projects.edit.project' record}}<button title="Load {{component.labels.c_singular}}" type="button" class="btn btn-space btn-default btn-rounded"><i class="fa fa-navicon"></i> Load Project</button>{{/link-to}}
+                {{/if}}
+            </div>
+        </div>
+    </div> 
+</div>

@@ -1,0 +1,11 @@
+<div class="row">
+    {{#each records as |record|}}
+        {{mav-crud-list-row-item component=component record=record}}
+    {{/each}}
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        {{outlet}}
+    </div>
+</div>    
+

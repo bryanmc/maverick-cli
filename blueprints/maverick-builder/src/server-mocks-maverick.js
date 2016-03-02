@@ -8,6 +8,7 @@ module.exports = function (app) {
     var maverickRouter = express.Router();
     var shell = require('shelljs');
     var fs = require('fs');
+    var path = require('path');
     
     app.use(bodyParser.urlencoded());
     app.use(bodyParser.json());
@@ -15,6 +16,84 @@ module.exports = function (app) {
     maverickRouter.get('/', function (req, res) {
         //shell.exec("ember g maverick-builder");
         res.send({ project: { id: 1, number: 123, name: 'Fooshnickins' } });
+    });
+    
+    maverickRouter.get('/rec-dir-scan/:path', function (req, res) {
+        var path = req.params.path;
+        
+        function walk(currentDirPath, callback) {
+            var fs = require('fs'); 
+            var path = require('path');
+            fs.readdir(currentDirPath, function (err, files) {
+                if (err) {
+                    throw new Error(err);
+                }
+                files.forEach(function (name) {
+                    var filePath = path.join(currentDirPath, name);
+                    var stat = fs.statSync(filePath);
+                    if (stat.isFile()) {
+                        callback(filePath, stat);
+                    } else if (stat.isDirectory()) {
+                        walk(filePath, callback);
+                    }
+                });
+            });
+        }
+        
+        var paths = [];
+        
+        if (path === "root"){
+            path = "./";
+            paths.push(path);
+        }else if(path === "selected"){
+            // paths.push('app');
+            // paths.push('config');
+            paths.push('node_modules/maverick-cli/addon');
+            // paths.push('node_modules/maverick-cli');
+            // paths.push('node_modules/maverick-cli');
+            // paths.push('server');
+        }else if(path === "typeahead"){
+            paths.push('app');
+            paths.push('config');
+            paths.push('node_modules/maverick-cli');
+            paths.push('server');
+        }else{
+            path = path.replace(/,/g, '/');
+            paths.push(path);
+        }
+        
+        var pathsArray = [];
+        paths = paths.sort();
+        for (var index = 0; index < paths.length; index++) {
+            var item = paths[index];
+            walk(item, function(item, stat){
+                if ( item.indexOf('.git') === -1 ){
+                    var commaPath = item.replace(/\//g, ',');
+                    var object = {};
+                    object.html = '<li class="file" data-file-path="'+commaPath+'"><i class="fa fa-icon fa-file"></i> '+item+'</li>';
+                    object.dirHtml = '<li class="directory"><i class="fa fa-icon fa-folder"></i><span class="replace-dir-name">directory name</span></li>';
+                    object.path = item;
+                    object.commaPath = commaPath;
+                    pathsArray.push(object);
+                }
+            });
+        }
+
+        var currentArrayLength = 0;
+        var newArrayLength = 0;
+        var poll = setInterval(function(){
+
+            newArrayLength = pathsArray.length;
+            if (currentArrayLength === newArrayLength){
+                res.send({results: pathsArray});
+                clearInterval(poll);
+            }else{
+                currentArrayLength = newArrayLength;
+            }
+            
+        },1000);
+        
+        
     });
 
     maverickRouter.get('/read-file/:path', function (req, res) {

@@ -2,12 +2,17 @@
 
 <div id="maverick-editor">
     <div id="maverick-editor-handler">{{fa-icon "expand" size="lg"}}</div>
+    <div id="maverick-editor-jump-to">
+        <div class="button top">{{fa-icon "chevron-up" size="lg"}}</div>
+        <div class="button bottom">{{fa-icon "chevron-down" size="lg"}}</div>
+    </div>
+
     
     <pre id="editor"></pre>
     <span id="editor-file-path" data-file-path=""></span>
     
     <div id="maverick-editor-options">
-        <div style="font-size:1.5em;margin-bottom:20px; cursor:pointer;">
+        <div class="hide" style="font-size:1.5em;margin-bottom:20px; cursor:pointer;">
             <span class="label label-success">Files</span>
             <span class="label label-default">Components</span>
             <span class="label label-default">Generator</span>
@@ -16,18 +21,34 @@
         <div class="row">
             
              <div class="col-lg-6">
+                <h5>Directory<hr />
+                <form id="fuzzy-search-file-loader">
+                    <div class="form-group input-group-sm">
+                        <input id="typeahead_state_join" name="query" type="text" class="form-control" placeholder="File Name..." autocomplete="off">
+                    </div>
+                </form>
+                </h5>
+                <ul id="full-dir-list" class="route-file-list">
+                    {{!--<li data-file-path="app,controllers,{{currentRouteName}}.js">{{fa-icon "file-text"}} {{currentRouteName}} controller</li>--}}
+                    {{!--<li data-file-path="app,routes,{{currentRouteName}}.js">{{fa-icon "file-text"}} {{currentRouteName}} route</li>--}}
+                    {{!--<li data-file-path="app,templates,{{currentRouteName}}.hbs">{{fa-icon "file-text"}} {{currentRouteName}} template</li>--}}
+                    
+                    
+                </ul>
+            </div>
+            
+            <div class="col-lg-6">
                 <h5>Route Files: {{currentRouteName}}<hr /></h5>
                 <ul class="route-file-list">
                     <li data-file-path="app,controllers,{{currentRouteName}}.js">{{fa-icon "file-text"}} {{currentRouteName}} controller</li>
                     <li data-file-path="app,routes,{{currentRouteName}}.js">{{fa-icon "file-text"}} {{currentRouteName}} route</li>
                     <li data-file-path="app,templates,{{currentRouteName}}.hbs">{{fa-icon "file-text"}} {{currentRouteName}} template</li>
                 </ul>
-            </div>
-            
-            <div class="col-lg-6">
+                
                 <h5>Application Files<hr /></h5>
                 <ul class="route-file-list">
                     <li data-file-path="config,environment.js">{{fa-icon "file-text"}} environment config</li>
+                    <li data-file-path="app,router.js">{{fa-icon "file-text"}} application router</li>
                     <li data-file-path="app,controllers,application.js">{{fa-icon "file-text"}} application controller</li>
                     <li data-file-path="app,templates,application.hbs">{{fa-icon "file-text"}} application template</li>
                     <li data-file-path="app,adapters,application.js">{{fa-icon "file-text"}} application adapter</li>
@@ -36,8 +57,6 @@
                     <li data-file-path="server,mocks,maverick.js">{{fa-icon "file-text"}} HTTP mock server</li>
                     <li data-file-path="app,components,maverick-editor.js">{{fa-icon "file-text"}} maverick editor js</li>
                     <li data-file-path="app,templates,components,maverick-editor.hbs">{{fa-icon "file-text"}} maverick editor hbs</li>
-                    <li data-file-path="app,components,embeddable-tweet.js">{{fa-icon "file-text"}} tweet js</li>
-                    <li data-file-path="app,templates,components,embeddable-tweet.hbs">{{fa-icon "file-text"}} tweet hbs</li>
                 </ul>
             </div>
             
@@ -49,7 +68,7 @@
                 <h5>Blueprint Generator<hr /></h5>
                 <form id="blueprint_gen_form" class="form-inline">
                     <div class="form-group input-group-sm">
-                        <input name="name" type="text" class="form-control" placeholder="Blueprint Name">
+                        <input id="typeahead_state_join" name="name" type="text" class="form-control" placeholder="Blueprint Name">
                     </div>
                     <div class="form-group input-group-sm">
                         <select name="type" class="form-control">
@@ -70,7 +89,7 @@
                 <hr />
                 <form id="command_line_form" class="form-inline">
                     <div class="form-group input-group-sm">
-                        <input autocomplete="off" name="content" type="text" class="form-control" placeholder="$ terminal command">
+                        <input id="terminal-command-field" autocomplete="off" name="content" type="text" class="form-control" placeholder="$ terminal command">
                     </div>
                     <button type="submit" class="btn btn-default btn-sm">Send</button>
                 </form>
@@ -86,9 +105,33 @@
 <!--### Editor Styles ###-->
 <style>
     
-    .route-file-list li {
+    #full-dir-list {
+        padding: 25px;
+        max-height: 400px;
+        overflow-y: auto;
+        background: #F9F9F9;
+        color: #151515 !important;
+    }
+    #full-dir-list li {
+        list-style-type:none;
+    }
+    #full-dir-list li.file{
+        padding-left: 15px;
+    }
+    .route-file-list li.file, .route-file-list li.directory{
+        color: #151515 !important;
+    }
+    #editor-file-path {
+       background: rgba(66, 66, 66, 0.65);
+        padding: 4px 10px;
+        position: absolute; z-index: 1000000;
+        bottom: 0; right: 500px;
+        color: white;
+    }
+    #maverick-editor-options .route-file-list li {
         cursor: pointer;
         color: #ccc;
+        padding-bottom: 10px;
     }
     #maverick-editor-handler {
         margin: 0;
@@ -104,6 +147,28 @@
         float:right;
         text-align: center;
         cursor: pointer;
+    }
+    #maverick-editor-jump-to .button {
+        margin: 0;
+        position: relative;
+        width: 40px;
+        height: 40px;
+        padding: 10px;
+        right: 515px;
+        color: #fff;
+        background: #338C4A;
+        z-index: 10000000;
+        text-align: center;
+        cursor: pointer;
+        float: right;
+    }
+    #maverick-editor-jump-to .top {
+        top: 0px;
+    }
+    #maverick-editor-jump-to .bottom {
+        bottom: 0px;
+        right: 480px;
+        margin-top: 427px;
     }
     #maverick-editor {
         background: #202020;
@@ -129,6 +194,8 @@
         font-weight: bold;
         font-size: 14px;
     }
+    .ace_search_field { color: #333 !important;}
+    
     #maverick-editor-options {
         margin: 0;
         position: fixed;
@@ -160,8 +227,10 @@
         var readFileEndpoint = "/api/maverick/read-file/";
         var saveFileEndpoint = "/api/maverick/save-file/";
         var commandLineEndpoint = "/api/maverick/command-line/";
+        var recDirScanEndpoint = "/api/maverick/rec-dir-scan/";
         var editor = ace.edit("editor");
-        
+        var typeaheadFileNameList = [];
+        var recentEditorFiles = getRecentEditorFiles();
         
         /**
          * Get the editor state from saved cookie and then 
@@ -187,6 +256,24 @@
             exec: function(editor) {
                 console.log("Keyboard shortcut: save");
                 saveEditorFile();
+            },
+            readOnly: true // false if this command should not apply in readOnly mode
+        });
+        editor.commands.addCommand({
+            name: 'focusFuzzyFileSearch',
+            bindKey: {win: 'Ctrl-P',  mac: 'Command-P'},
+            exec: function(editor) {
+                console.log("Keyboard shortcut: fuzzy search focus");
+                $('#typeahead_state_join').focus();
+            },
+            readOnly: true // false if this command should not apply in readOnly mode
+        });
+        editor.commands.addCommand({
+            name: 'focusTerminalCommandField',
+            bindKey: {win: 'Ctrl-O',  mac: 'Command-O'},
+            exec: function(editor) {
+                console.log("Keyboard shortcut: terminal command focus");
+                $('#terminal-command-field').focus();
             },
             readOnly: true // false if this command should not apply in readOnly mode
         });
@@ -218,6 +305,16 @@
         });
         
         /**
+         * Set focus on editor on page load so that editor shortcut commands are
+         * immediately available without first clicking within the editor manually.
+         */
+        focusMaverickEditor();
+        function focusMaverickEditor(){
+            var editorField = $('.ace_text-input');
+            editorField.focus();
+        }
+        
+        /**
          * Loads a file into the editor based on the file path
          * given, where commas replace normal forward slashes as explained
          * above.
@@ -246,7 +343,7 @@
                 setEditorMode(file);
                 
                 //Update span element which tracks the current file
-                $("#editor-file-path").data('file-path', file);
+                $("#editor-file-path").data('file-path', file).html(file.replace(/,/g, ' > '));
                 
                 //Get the current editor settings from cookie
                 var editorSettings = getMaverickEditor();
@@ -258,6 +355,11 @@
                 
                 //Save the editor state to cookie
                 saveMaverickEditor(editorSettings);
+                
+                //Update recent files
+                updateRecentEditorFiles(file);
+                //Refresh file directory
+                loadRecentlyOpenFileDirectory();
                 
             }).fail(function(res){
                 console.log('File read error:', res);
@@ -321,6 +423,36 @@
             });
         }
         
+        function getRecentEditorFiles(){
+            var recentEditorFiles = [];
+            var editorSettings = getMaverickEditor();
+            if ( typeof editorSettings.recentEditorFiles !== 'undefined' ){
+                recentEditorFiles = editorSettings.recentEditorFiles;
+            }
+            return recentEditorFiles;
+        }
+        
+        function updateRecentEditorFiles(file){
+            var recentEditorFiles = getRecentEditorFiles();
+            var i = 0;
+            recentEditorFiles.forEach(function(item){
+                if ( file === item ){
+                    recentEditorFiles.splice(i, 1);
+                }
+                i++;
+            });
+            //Limit the list to latest 10...
+            recentEditorFiles = recentEditorFiles.splice(0, 10);
+            //Get editor settings
+            var editorSettings = getMaverickEditor();
+            //Add new file to beginning
+            recentEditorFiles.push(file);
+            //Update editor setting properties
+            editorSettings.recentEditorFiles = recentEditorFiles;
+            //Save the editor state to cookie
+            saveMaverickEditor(editorSettings);
+        }
+        
         /**
          * Sets the current editor session's mode based on the file extension.
          */
@@ -339,6 +471,169 @@
         }
         
         /**
+         * Generate an array of file paths for the dataset (array) required
+         * for typeahead.  This generates a path like app,index.html which
+         * can be directly passed from form to function to load the file in the
+         * editor.
+         */
+        generateFileDirTypeahead();
+        function generateFileDirTypeahead(){
+            var fullFilePath = recDirScanEndpoint+"typeahead";
+            $.ajax({
+                url: fullFilePath
+            }).done(function(res) {
+                var files = res.results.sort();
+                //Iterate through each file which is an object {commaPath: value, dirHtml: li folder, html: li file, path: full path}
+                files.forEach(function(listItem){
+                    typeaheadFileNameList.push(listItem.commaPath);
+                });
+            }).fail(function(res){
+                alert('File directory load failed!');
+                console.log('File directory load error:', res);
+            });
+        }
+        
+        
+        /**
+         * Loads the recently opened files into the directory file selector
+         */
+         loadRecentlyOpenFileDirectory();
+         function loadRecentlyOpenFileDirectory(){
+            var fullFilePath = recDirScanEndpoint+"config";
+            var directoryList = $("#full-dir-list");
+            var recentEditorFiles = getRecentEditorFiles();
+            
+            $('.recently-opened-filed').remove();
+            
+            $.ajax({
+                url: fullFilePath
+            }).done(function(res) {
+                var files = res.results.sort();
+                var file = files[0];
+                var listItemHtml = $(file.html);
+
+                recentEditorFiles.forEach(function(item){
+                    var template = $(listItemHtml).clone();
+                    $(template).addClass('recently-opened-filed');
+                    $(template).data('file-path', item);
+                    var pathArray = item.split(',');
+                    var pathLength = pathArray.length;
+                    var wantedIndexes = [pathLength - 1, pathLength - 2];
+                    var wantedPath = pathArray[wantedIndexes[1]];
+                    var wantedFile = pathArray[wantedIndexes[0]];
+                    var finalName = wantedPath + ' > ' + wantedFile;
+                    $(template).html(finalName);
+                    $(directoryList).prepend($(template));
+                });
+
+            });
+
+         }
+        
+        /**
+         * Super heavy function that handles building a clickable file tree in the
+         * maverick editor UI.
+         */
+        loadSelectiveFileDirectory();
+        function loadSelectiveFileDirectory(){
+            var directoryList = $("#full-dir-list");
+            $(directoryList).append('------------------------------');
+            var fullFilePath = recDirScanEndpoint+"selected";
+            
+            $.ajax({
+                url: fullFilePath
+            }).done(function(res) {
+                var files = res.results.sort();
+                
+                //Setup Variables required later
+                var listItemHtml;
+                var rawfinalList = {};
+                var sortedFinalList = {};
+                var fileCount = 0;
+                // console.log("Files", files);
+                
+                //Iterate through each file which is an object {commaPath: value, dirHtml: li folder, html: li file, path: full path}
+                files.forEach(function(listItem){
+                    //Get the item's full path
+                    listItemPath = listItem.path;
+                    //Get the file list item html
+                    listItemHtml = $(listItem.html);
+                    //Get the dir list item html
+                    listItemDirHtml = $(listItem.dirHtml);
+                    
+                    //Create an array from it's path
+                    var listItemParts = listItemPath.split('/');
+                    //Get the length of the path + file name when split into an array
+                    var listItemLength = listItemParts.length;
+                    //Create an array with everything except the file name (the path name array split)
+                    var listItemPathArray = listItemParts.slice(0, listItemLength -1);
+                    
+                    //Rejoin just the path array, back to a string path (with no file name)
+                    var listItemPath = listItemPathArray.join('/');
+                    //Rejoin the path array back to a string path with _ in place of / (and no file name)
+                    var listItemPathKey = listItemPathArray.join('_');
+                    //Set the file name by getting the last item of the parts array
+                    var fileName = listItemParts[listItemLength - 1];
+                    
+                    //Start building an object literal whose keys are the underscored path names and whose
+                    //value is an array of the path's file names ['app.js', 'index.html'].  We end up with
+                    // [{app: [app.js, index.html]}, {app_routes: [index.js, user.js]}], etc...
+                    var obj = {
+                        listItemHtml: listItemHtml,
+                        listItemDirHtml: listItemDirHtml,
+                        listItemPath: listItemPath,
+                        listItemFileName: fileName
+                    }
+                    if ( typeof rawfinalList[listItemPathKey] === 'undefined' ){
+                        rawfinalList[listItemPathKey] = [];
+                        rawfinalList[listItemPathKey].push(obj);
+                        // rawfinalList[listItemPathKey].push(fileName);
+                    }else{
+                        rawfinalList[listItemPathKey].push(obj);
+                    }
+                    
+                    //Sort them and set it to a new array `sortedFinalList`
+                    Object.keys(rawfinalList).sort().forEach(function(key) {
+                        sortedFinalList[key] = rawfinalList[key];
+                    });
+                    
+                    //At this point we have the array of objects
+                    
+                    fileCount++;
+                    if ( fileCount === files.length ){
+                        // console.log("Sorted final list", sortedFinalList);
+                        for (var directory in sortedFinalList) {
+                            if (sortedFinalList.hasOwnProperty(directory)) {
+                                
+                                //Clone the directory LI template
+                                var listItemHtmlMarkup = $(listItemDirHtml).clone();
+                                //Replace the inner text "replace name" text to actual dir's name
+                                var namedDirectory = $(listItemHtmlMarkup).html(directory.replace(/_/g, ' > '));
+                                //Append the element 
+                                $(directoryList).append(namedDirectory);
+                                
+                                //Get the directory's child files
+                                var dirFiles = sortedFinalList[directory];
+                                // console.log(directory, dirFiles);
+                                
+                                dirFiles.forEach(function(file){
+                                    var listItemHtml = file.listItemHtml;
+                                    var namedFile = $(listItemHtml).html(file.listItemFileName);
+                                    $(directoryList).append(namedFile); 
+                                });
+                            }
+
+                        }
+                    }
+                    
+                });
+            }).fail(function(res){
+                alert('File directory load failed!');
+                console.log('File directory load error:', res);
+            });
+        }
+        
+        /**
          * Set the body extra bottom padding to the height of the editor so that
          * we can scroll to the bottom of the page properly.
          */
@@ -346,7 +641,7 @@
         function setBodyPaddingEditor(){
             var editorHeight = $("#maverick-editor").height();
             console.log("editor height", editorHeight);
-            $("body").css({"padding-bottom": editorHeight+"px"});
+            $("body").css({"margin-bottom": editorHeight+"px"});
         }
         
         /**
@@ -371,10 +666,23 @@
         });
         
         /**
+         * Click handler to jump all the way up or down the current file.
+         */
+        $("#maverick-editor-jump-to").on('click', '.button', function(){
+           var direction = $(this).hasClass('top') ? 'up' : 'down';
+           if ( direction === 'up' ){
+               editor.gotoLine(0);
+           }else{
+               var end = editor.session.getLength();
+               editor.gotoLine(end);
+           }
+        });
+        
+        /**
          * Click handler to load an editor file when clicked on from the list
          * in the editor GUI.
          */
-        $("ul.route-file-list li").on('click', function(){
+        $('ul.route-file-list').on('click', 'li', function(){
             var file = $(this).data('file-path');
             loadEditorFile(file, 1);
         });
@@ -403,6 +711,28 @@
             
         });
         
+        /**
+         * Form submission handler: load file from fuzzy file search field
+         */
+        $('#fuzzy-search-file-loader').on('submit', function(e){
+            e.preventDefault();
+            var field = $(this).find('input');
+            var array = $( this ).serializeArray();
+            var filePath = array[0].value;
+            //If form is submitted empty, we simply focus the editor
+            if ( !filePath ){
+                focusMaverickEditor();
+            //Otherwise we load the given file and jump to line zero
+            }else{
+                loadEditorFile(filePath, 0);
+                $(field).val('');
+                editor.gotoLine(0); editor.gotoLine(0);
+            }
+        })
+        
+        /**
+         * Form submission Handler: submit command to command line
+         */
         $("#command_line_form").on('submit', function(e){
             e.preventDefault();
             var endpoint = commandLineEndpoint;
@@ -422,6 +752,81 @@
                 console.log('Command execution error:', res);
             });
             
+        });  
+        
+        /*! ember-typeahead 28-03-2014 */
+     
+        function fuzzyMatcher(item, query, fuzziness, pinStart) {
+            fuzziness = regexFuzziness(fuzziness);
+            pinStart = regexPinStart(pinStart);
+
+            var pattern = query.split("").join("." + fuzziness);
+            var regex = new RegExp(pinStart + pattern, "img");
+            //console.log(pinStart + pattern);
+            return regex.test(item);
+        }
+
+        function fuzzyHighlighter(item, query, joinHighlight, fuzziness, pinStart) {
+            fuzziness = regexFuzziness(fuzziness);
+            pinStart = regexPinStart(pinStart);
+
+            var pattern = query.split("");
+            var replace = '$1';
+            if (joinHighlight === true) {
+                replace = replace + "<span style='color:yellow'>$2</span>$3";
+                pattern = "(" + pattern.join("." + fuzziness) + ")(.*)";
+            } else {
+                var count = 0;
+                pattern.forEach(function(i){
+                    //console.log("i", i);
+                    var j = (count * 2) + 1;
+                    replace = replace + "<b>" + "$" + (j + 1) + "</b>" + "$" + (j + 2);
+                    count++;
+                });
+                pattern = "(" + pattern.join(")(." + fuzziness + ")(") + ")(.*)";
+            }
+            var regex = new RegExp(pinStart + pattern, "img");
+            // console.log(pinStart + pattern, replace);
+            return item.replace(regex, replace);
+        }
+
+        function regexFuzziness(fuzziness) {
+            if (isNaN(fuzziness) || !fuzziness) {
+                fuzziness = "*?";
+            } else {
+                fuzziness = "{0," + fuzziness + "}";
+            }
+            return fuzziness;
+        }
+
+        function regexPinStart(pinStart) {
+            if (pinStart !== false) {
+                return "(^)";
+            }
+            return "(.*?)";
+        }
+        
+        //Setup the search abilities
+        //http://fiddle.jshell.net/YHfPf/show/ 
+        //http://fiddle.jshell.net/YHfPf/
+        // $('#typeahead_state_join').typeahead({
+        //     source: typeaheadFileNameList,
+        //     matcher: function (item) {
+        //         return fuzzyMatcher(item, this.query, 3, false);
+        //     },
+        //     highlighter: function (item) {
+        //         return fuzzyHighlighter(item, this.query, true, 3, false);
+        //     }
+        // });
+        $('#typeahead_state_join').typeahead({
+            source: typeaheadFileNameList,
+            matcher: function (item) {
+                return fuzzyMatcher(item, this.query);
+            },
+            highlighter: function (item) {
+                return fuzzyHighlighter(item, this.query, true);
+            }
         });
+       
         
     </script>

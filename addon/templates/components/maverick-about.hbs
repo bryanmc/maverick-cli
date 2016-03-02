@@ -1,0 +1,28 @@
+{{#each model.tweets as |tweet|}} 
+    <div class="col-lg-4">
+        <div class="widget widget-pie">
+            <div class="widget-head"><span class="title">{{tweet.twitterFullName}}</span><hr /></div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div style="max-height:175px;overflow:hidden;">
+                        <center><img class="img-thumbnail" src="https://webthumbnail.org/api/?width=405&height=215&screen=1280&url=http://teespring.com" /></center>
+                    </div>
+                    <div style="margin-top:10px;" role="alert" class="hide alert alert-info alert-icon alert-dismissible">
+                        <div class="icon"><i class="fa fa-info"></i></div>
+                        <div class="message">
+                          <button type="button" data-dismiss="alert" aria-label="Close" class="close"><span aria-hidden="true" class="s7-close"></span></button>This is a store filled with an assortment of different products ready to ship out!
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row chart-info">
+                <div class="col-xs-12">
+                    <button title="Delete" type="button" class="btn btn-space btn-danger btn-rounded pull-left"><i class="fa fa-trash"></i></button>
+                    <button title="Clone" type="button" class="btn btn-space btn-default btn-rounded pull-left"><i class="fa fa-clone"></i></button>
+                    <button title="Refresh" type="button" class="btn btn-space btn-default btn-rounded pull-left"><i class="fa fa-refresh"></i></button>
+                    <button title="Load" type="button" class="btn btn-space btn-default btn-rounded"><i class="fa fa-navicon"></i> Load Project</button>
+                </div>
+            </div>
+        </div> 
+    </div>
+{{/each}}
